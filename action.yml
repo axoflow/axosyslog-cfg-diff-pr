@@ -1,4 +1,4 @@
-name: syslog-ng CFG diff (PR)
+name: AxoSyslog CFG diff (PR)
 description: Calculates the config differences that a PR introduces and prepares a comment about it, to be picked up by a workflow_run workflow.
 
 runs:
@@ -19,15 +19,15 @@ runs:
         make bison BISON_INSTALL_PATH=${GITHUB_WORKSPACE}/bin
         echo "${GITHUB_WORKSPACE}/bin" >> $GITHUB_PATH
 
-    - name: Checkout syslog-ng
+    - name: Checkout AxoSyslog
       uses: actions/checkout@v4
       with:
         repository: ${{ github.repository }}
-        path: syslog-ng
+        path: axosyslog
 
     - name: Query PR info and add PR head remote
       shell: bash
-      working-directory: syslog-ng
+      working-directory: axosyslog
       run: |
         git fetch origin
 
@@ -50,45 +50,45 @@ runs:
 
     - name: Checkout PR base branch
       shell: bash
-      working-directory: syslog-ng
+      working-directory: axosyslog
       run: |
         git checkout ${COMMON_ANCESTOR_REF}
 
     - name: Generate base CFG database
       shell: bash
-      working-directory: syslog-ng-cfg-helper
+      working-directory: axosyslog-cfg-helper
       run: |
         make clean
-        make db SYSLOG_NG_SOURCE_DIR=${GITHUB_WORKSPACE}/syslog-ng DATABASE_FILE=${GITHUB_WORKSPACE}/base.db
+        make db SYSLOG_NG_SOURCE_DIR=${GITHUB_WORKSPACE}/axosyslog DATABASE_FILE=${GITHUB_WORKSPACE}/base.db
 
     - name: Checkout PR head branch
       shell: bash
-      working-directory: syslog-ng
+      working-directory: axosyslog
       run: |
         git checkout ${HEAD_REPOSITORY_OWNER}/${HEAD_REF_NAME}
 
     - name: Generate head CFG database
       shell: bash
-      working-directory: syslog-ng-cfg-helper
+      working-directory: axosyslog-cfg-helper
       run: |
         make clean
-        make db SYSLOG_NG_SOURCE_DIR=${GITHUB_WORKSPACE}/syslog-ng DATABASE_FILE=${GITHUB_WORKSPACE}/head.db
+        make db SYSLOG_NG_SOURCE_DIR=${GITHUB_WORKSPACE}/axosyslog DATABASE_FILE=${GITHUB_WORKSPACE}/head.db
 
     - name: Generate CFG diff
       shell: bash
-      working-directory: syslog-ng-cfg-helper
+      working-directory: axosyslog-cfg-helper
       run: |
         poetry run python ./syslog_ng_cfg_helper/generate_diff.py -o ${GITHUB_WORKSPACE}/base.db -n ${GITHUB_WORKSPACE}/head.db > ${GITHUB_WORKSPACE}/diff
 
     - name: Generate comment of CFG differences
       shell: bash
-      working-directory: syslog-ng
+      working-directory: axosyslog
       run: |
         if [[ $(wc -l ${GITHUB_WORKSPACE}/diff | cut -d " " -f1) -gt 1 ]]; then
           awk '{printf "%s\\n", $0}' ${GITHUB_WORKSPACE}/diff > ${GITHUB_WORKSPACE}/diff_escaped
 
           COMMENT="#### This Pull Request introduces config grammar changes\r\n"
-          COMMENT="${COMMENT}[${{ github.repository_owner }}/${COMMON_ANCESTOR_REF}](https://github.com/${{ github.repository }}/tree/${COMMON_ANCESTOR_REF}) -> [${HEAD_REPOSITORY_OWNER}/${HEAD_REF_NAME}](https://github.com/${HEAD_REPOSITORY_OWNER}/syslog-ng/tree/${HEAD_REF_NAME})\r\n"
+          COMMENT="${COMMENT}[${{ github.repository_owner }}/${COMMON_ANCESTOR_REF}](https://github.com/${{ github.repository }}/tree/${COMMON_ANCESTOR_REF}) -> [${HEAD_REPOSITORY_OWNER}/${HEAD_REF_NAME}](https://github.com/${HEAD_REPOSITORY_OWNER}/${HEAD_REPOSITORY}/tree/${HEAD_REF_NAME})\r\n"
           COMMENT="${COMMENT}<details>\r\n\r\n"
           COMMENT="${COMMENT}\`\`\`diff\r\n"
           COMMENT="${COMMENT}$(cat ${GITHUB_WORKSPACE}/diff_escaped)\n"
