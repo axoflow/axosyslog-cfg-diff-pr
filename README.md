@@ -1,4 +1,4 @@
-# AxoSyslog config grammar diff (PR) V2
+# AxoSyslog config grammar diff (PR) V3
 
 This action uses [syslog-ng-cfg-helper](https://github.com/alltilla/syslog-ng-cfg-helper) to calculate the config differences that a PR introduces and prepares a comment about it, to be picked up by a workflow_run workflow.
 
@@ -26,7 +26,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: alltilla/syslog-ng-cfg-diff-pr@v2
+      - uses: axoflow/axosyslog-cfg-diff-pr@v3
         continue-on-error: true
 ```
 
