@@ -56,7 +56,7 @@ runs:
 
     - name: Generate base CFG database
       shell: bash
-      working-directory: axosyslog-cfg-helper
+      working-directory: syslog-ng-cfg-helper
       run: |
         make clean
         make db SYSLOG_NG_SOURCE_DIR=${GITHUB_WORKSPACE}/axosyslog DATABASE_FILE=${GITHUB_WORKSPACE}/base.db
@@ -69,14 +69,14 @@ runs:
 
     - name: Generate head CFG database
       shell: bash
-      working-directory: axosyslog-cfg-helper
+      working-directory: syslog-ng-cfg-helper
       run: |
         make clean
         make db SYSLOG_NG_SOURCE_DIR=${GITHUB_WORKSPACE}/axosyslog DATABASE_FILE=${GITHUB_WORKSPACE}/head.db
 
     - name: Generate CFG diff
       shell: bash
-      working-directory: axosyslog-cfg-helper
+      working-directory: syslog-ng-cfg-helper
       run: |
         poetry run python ./syslog_ng_cfg_helper/generate_diff.py -o ${GITHUB_WORKSPACE}/base.db -n ${GITHUB_WORKSPACE}/head.db > ${GITHUB_WORKSPACE}/diff
 
