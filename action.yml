@@ -78,7 +78,7 @@ runs:
       shell: bash
       working-directory: axosyslog-cfg-helper
       run: |
-        poetry run python ./syslog_ng_cfg_helper/generate_diff.py -o ${GITHUB_WORKSPACE}/base.db -n ${GITHUB_WORKSPACE}/head.db > ${GITHUB_WORKSPACE}/diff
+        poetry run python ./axosyslog_cfg_helper/generate_diff.py -o ${GITHUB_WORKSPACE}/base.db -n ${GITHUB_WORKSPACE}/head.db > ${GITHUB_WORKSPACE}/diff
 
     - name: Generate comment of CFG differences
       shell: bash
