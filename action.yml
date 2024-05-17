@@ -4,15 +4,15 @@ description: Calculates the config differences that a PR introduces and prepares
 runs:
   using: composite
   steps:
-    - name: Checkout syslog-ng-cfg-helper source
+    - name: Checkout axosyslog-cfg-helper source
       uses: actions/checkout@v4
       with:
-        repository: alltilla/syslog-ng-cfg-helper
-        path: syslog-ng-cfg-helper
+        repository: alltilla/axosyslog-cfg-helper
+        path: axosyslog-cfg-helper
 
-    - name: Setup syslog-ng-cfg-helper
+    - name: Setup axosyslog-cfg-helper
       shell: bash
-      working-directory: syslog-ng-cfg-helper
+      working-directory: axosyslog-cfg-helper
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
         make venv
@@ -56,7 +56,7 @@ runs:
 
     - name: Generate base CFG database
       shell: bash
-      working-directory: syslog-ng-cfg-helper
+      working-directory: axosyslog-cfg-helper
       run: |
         make clean
         make db SYSLOG_NG_SOURCE_DIR=${GITHUB_WORKSPACE}/axosyslog DATABASE_FILE=${GITHUB_WORKSPACE}/base.db
@@ -69,14 +69,14 @@ runs:
 
     - name: Generate head CFG database
       shell: bash
-      working-directory: syslog-ng-cfg-helper
+      working-directory: axosyslog-cfg-helper
       run: |
         make clean
         make db SYSLOG_NG_SOURCE_DIR=${GITHUB_WORKSPACE}/axosyslog DATABASE_FILE=${GITHUB_WORKSPACE}/head.db
 
     - name: Generate CFG diff
       shell: bash
-      working-directory: syslog-ng-cfg-helper
+      working-directory: axosyslog-cfg-helper
       run: |
         poetry run python ./syslog_ng_cfg_helper/generate_diff.py -o ${GITHUB_WORKSPACE}/base.db -n ${GITHUB_WORKSPACE}/head.db > ${GITHUB_WORKSPACE}/diff
 
