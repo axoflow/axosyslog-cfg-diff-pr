@@ -59,7 +59,7 @@ runs:
       working-directory: axosyslog-cfg-helper
       run: |
         make clean
-        make db SYSLOG_NG_SOURCE_DIR=${GITHUB_WORKSPACE}/axosyslog DATABASE_FILE=${GITHUB_WORKSPACE}/base.db
+        make db AXOSYSLOG_SOURCE_DIR=${GITHUB_WORKSPACE}/axosyslog DATABASE_FILE=${GITHUB_WORKSPACE}/base.db
 
     - name: Checkout PR head branch
       shell: bash
@@ -72,7 +72,7 @@ runs:
       working-directory: axosyslog-cfg-helper
       run: |
         make clean
-        make db SYSLOG_NG_SOURCE_DIR=${GITHUB_WORKSPACE}/axosyslog DATABASE_FILE=${GITHUB_WORKSPACE}/head.db
+        make db AXOSYSLOG_SOURCE_DIR=${GITHUB_WORKSPACE}/axosyslog DATABASE_FILE=${GITHUB_WORKSPACE}/head.db
 
     - name: Generate CFG diff
       shell: bash
